@@ -1,0 +1,3 @@
+[submodule "llz80emu"]
+	path = llz80emu
+	url = https://github.com/itsmevjnk/llz80emu.git
