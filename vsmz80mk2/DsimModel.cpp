@@ -4,7 +4,7 @@
 #define DC(s) (CHAR*)(s) // convert const char* (e.g. string literal) to CHAR* (VSM SDK string) - NOTE: ugly code!
 
 /* debug printing */
-#if defined(_DEBUG)
+#if defined(DEBUG)
 #define DEBUG_LOG(...) _debug_popup->print(__VA_ARGS__); _debug_popup->print((CHAR*)"\n")
 #else
 #define DEBUG_LOG(...)
@@ -25,7 +25,7 @@ VOID DsimModel::setup(IINSTANCE* instance, IDSIMCKT* dsimckt) {
 	_inst = instance;
 	_ckt = dsimckt;
 
-#if defined(_DEBUG) // create debug popup window
+#if defined(DEBUG) // create debug popup window
 	CREATEPOPUPSTRUCT* cps = new CREATEPOPUPSTRUCT;
 	cps->caption = DC("Z80 Simulator Debugger Log");			// WIN Header
 	cps->flags = PWF_VISIBLE | PWF_SIZEABLE;				// Show + Size
@@ -137,7 +137,7 @@ VOID DsimModel::clk_pin_handler(ABSTIME time, DSIMMODES mode) {
 		update_pins(time, _emu.clock(get_pin_state())); // get input pin state, clock CPU, then update our pins
 	}
 
-#if defined(_DEBUG)
+#if defined(DEBUG)
 	if (pos) {
 		z80_registers_t regs = _emu.get_regs();
 		DEBUG_LOG(DC("AF=%04X BC=%04X DE=%04X HL=%04X"), regs.REG_AF, regs.REG_BC, regs.REG_DE, regs.REG_HL);
