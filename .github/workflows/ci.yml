@@ -1,0 +1,43 @@
+name: 'Build VSM model'
+on:
+  push:
+    branches:
+      - main
+      - dev/**
+    path:
+      - .github/workflows/**
+      - llz80emu/**
+      - vsmz80mk2/**
+
+jobs:
+  build:
+    name: 'Build vsmz80mk2.dll'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+        submodules: 'recursive'
+      - name: 'Install MinGW toolchain'
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x86
+      - name: 'Configure and build model'
+        id: build-model
+        uses: threeal/cmake-action@main
+      - name: 'Upload VSM model'
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsmz80mk2
+          path: ${{ steps.build-model.outputs.build-dir }}/vsmz80mk2.dll
+      - name: 'Create model pack'
+        run: |
+          mkdir -p out/MODELS
+          cp -r "$GITHUB_WORKSPACE/LIBRARY" out/
+          cp -r "${{ steps.build-model.outputs.build-dir }}/vsmz80mk2.dll" out/MODELS/
+      - name: 'Upload model pack'
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsmz80mk2_pack
+          path: out/**
